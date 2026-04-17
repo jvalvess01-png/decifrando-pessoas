@@ -51,6 +51,15 @@
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
+
+        /* Ocultar barra de rolagem da seleção de capítulos */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -78,7 +87,7 @@
 
             <!-- Botão de Ação (Abaixo da Capa) -->
             <div class="mt-8 w-full animate-on-scroll delay-300">
-                <a href="https://pay.kiwify.com.br/6Mx8riA" target="_blank" class="block w-full bg-brand-red hover:bg-red-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg shadow-red-900/20 flex flex-col items-center justify-center group">
+                <a href="#" class="checkout-btn block w-full bg-brand-red hover:bg-red-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg shadow-red-900/20 flex flex-col items-center justify-center group">
                     <span class="text-lg">Liberar meu acesso agora</span>
                     <span class="text-xs font-normal opacity-80 mt-1 group-hover:opacity-100">(Ir para o checkout seguro)</span>
                 </a>
@@ -143,6 +152,33 @@
                         </div>
                     </li>
                 </ul>
+            </section>
+
+            <!-- Por Dentro do E-book (Abas Dinâmicas) -->
+            <section class="mb-10">
+                <h3 class="text-2xl font-bold mb-6 text-brand-black animate-on-scroll">O que você vai encontrar...</h3>
+                
+                <!-- Botões Deslizantes -->
+                <div class="flex overflow-x-auto gap-3 pb-4 hide-scrollbar snap-x animate-on-scroll delay-100">
+                    <button onclick="changeChapter(1)" id="btn-cap-1" class="chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-brand-red text-white shadow-md shadow-red-900/20 snap-start">Capítulo 1</button>
+                    <button onclick="changeChapter(2)" id="btn-cap-2" class="chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-white text-gray-500 border border-gray-200 snap-start hover:border-brand-red hover:text-brand-red">Capítulo 2</button>
+                    <button onclick="changeChapter(3)" id="btn-cap-3" class="chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-white text-gray-500 border border-gray-200 snap-start hover:border-brand-red hover:text-brand-red">Capítulo 3</button>
+                    <button onclick="changeChapter(4)" id="btn-cap-4" class="chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-white text-gray-500 border border-gray-200 snap-start hover:border-brand-red hover:text-brand-red">Capítulo 4</button>
+                    <button onclick="changeChapter(5)" id="btn-cap-5" class="chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-white text-gray-500 border border-gray-200 snap-start hover:border-brand-red hover:text-brand-red">Capítulo 5</button>
+                </div>
+
+                <!-- Painel de Conteúdo -->
+                <div class="relative bg-white p-6 rounded-2xl border border-gray-100 shadow-sm min-h-[170px] flex flex-col justify-center animate-on-scroll delay-200 overflow-hidden">
+                    <div id="chapter-content" class="transition-all duration-300 ease-in-out opacity-100 translate-x-0">
+                        <h4 class="font-bold text-lg text-brand-black mb-2 flex items-center gap-2">
+                            <i data-lucide="book-open" class="text-brand-red w-5 h-5"></i>
+                            O Alfabeto Silencioso
+                        </h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Aprenda as três regras de ouro para ler pessoas sem cair no "efeito Sherlock Holmes". Entenda como identificar a "linha de base", a regra dos agrupamentos e o peso do contexto.
+                        </p>
+                    </div>
+                </div>
             </section>
 
             <!-- Avaliações / Prova Social -->
@@ -220,7 +256,7 @@
                     Se o conhecimento para se defender, influenciar e se conectar genuinamente com as pessoas for útil para a sua vida ou carreira neste momento, convido você a ter acesso ao manual completo.
                 </p>
 
-                <a href="https://pay.kiwify.com.br/6Mx8riA" target="_blank" class="block w-full bg-brand-red hover:bg-red-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg shadow-red-900/20 flex flex-col items-center justify-center group animate-on-scroll delay-200">
+                <a href="#" class="checkout-btn block w-full bg-brand-red hover:bg-red-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg shadow-red-900/20 flex flex-col items-center justify-center group animate-on-scroll delay-200">
                     <span class="text-lg">Sim, eu quero decifrar pessoas</span>
                     <span class="text-xs font-normal opacity-80 mt-1 group-hover:opacity-100">(Liberar meu acesso ao e-book)</span>
                 </a>
@@ -260,9 +296,98 @@
 
     </div>
 
+    <!-- Tela de Carregamento (Oculta por padrão) -->
+    <div id="loading-overlay" class="fixed inset-0 z-50 bg-brand-black/95 backdrop-blur-sm hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+        <i data-lucide="loader-2" class="w-12 h-12 text-brand-red animate-spin mb-4"></i>
+        <p class="text-white font-bold text-xl mb-2 tracking-wide">Acessando ambiente seguro</p>
+        <div class="flex items-center gap-1.5 text-gray-400 text-sm">
+            <i data-lucide="lock" class="w-3.5 h-3.5 text-green-400"></i>
+            <span>Criptografia de ponta a ponta</span>
+        </div>
+    </div>
+
     <script>
         // Inicializar os ícones do Lucide
         lucide.createIcons();
+
+        // --- Lógica de Redirecionamento e Tela de Carregamento ---
+        document.querySelectorAll('.checkout-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); // Impede o link de abrir imediatamente
+                
+                const overlay = document.getElementById('loading-overlay');
+                
+                // Mostrar a tela de carregamento (remove o hidden e aplica a opacidade para transição suave)
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+                
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.classList.add('opacity-100');
+                }, 10);
+
+                // Aguarda 1.5 segundos e redireciona para a Kiwify
+                setTimeout(() => {
+                    window.location.href = "https://pay.kiwify.com.br/6Mx8riA";
+                }, 1500);
+            });
+        });
+
+        // --- Lógica das Abas dos Capítulos ---
+        let isDragging = false; // Variável para controlar o arrasto no desktop e evitar cliques acidentais
+
+        const chapterData = {
+            1: { title: "O Alfabeto Silencioso", icon: "book-open", desc: "Aprenda as três regras de ouro para ler pessoas sem cair no 'efeito Sherlock Holmes'. Entenda como identificar a 'linha de base', a regra dos agrupamentos e o peso do contexto." },
+            2: { title: "O Domínio de Si Mesmo", icon: "user-check", desc: "Antes de ler o mundo, governe seu território. Descubra como convencer seu próprio cérebro a exalar confiança, controlar sinais de estresse e ocupar espaço sem parecer arrogante." },
+            3: { title: "O Escudo Comportamental", icon: "shield-alert", desc: "Seu detector de intenções. Aprenda a identificar incongruências (quando o corpo desmente as palavras) e a diferença vital entre um sorriso falso e um autêntico 'Sorriso de Duchenne'." },
+            4: { title: "O Dicionário do Corpo", icon: "search", desc: "Um mapa completo da cabeça aos pés. Descubra por que os pés são a parte mais honesta do corpo e como a 'regra do umbigo' revela a verdadeira direção da atenção de alguém." },
+            5: { title: "A Dinâmica Afetiva", icon: "flame", desc: "Os segredos biológicos da sedução. Entenda a Proxêmica (zonas íntimas), sinais silenciosos de interesse na paquera e os '4 cavaleiros' que destroem qualquer relação." }
+        };
+
+        function changeChapter(id) {
+            if (isDragging) return; // Se o usuário estava apenas arrastando a barra, cancela a ação de clique do botão
+            
+            // Atualizar o estilo visual dos botões
+            document.querySelectorAll('.chapter-btn').forEach((btn, index) => {
+                if (index + 1 === id) {
+                    btn.className = 'chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-brand-red text-white shadow-md shadow-red-900/20 snap-start';
+                } else {
+                    btn.className = 'chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-white text-gray-500 border border-gray-200 snap-start hover:border-brand-red hover:text-brand-red';
+                }
+            });
+
+            const contentEl = document.getElementById('chapter-content');
+            
+            // Iniciar animação de saída (desliza para esquerda e some)
+            contentEl.classList.remove('opacity-100', 'translate-x-0');
+            contentEl.classList.add('opacity-0', '-translate-x-4');
+            
+            setTimeout(() => {
+                // Atualizar o texto e o ícone
+                contentEl.innerHTML = `
+                    <h4 class="font-bold text-lg text-brand-black mb-2 flex items-center gap-2">
+                        <i data-lucide="${chapterData[id].icon}" class="text-brand-red w-5 h-5"></i>
+                        ${chapterData[id].title}
+                    </h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        ${chapterData[id].desc}
+                    </p>
+                `;
+                lucide.createIcons(); // Recriar o ícone injetado
+                
+                // Preparar a animação de entrada (desliza da direita)
+                contentEl.classList.remove('-translate-x-4');
+                contentEl.classList.add('translate-x-4');
+                
+                // Forçar a renderização do browser para reiniciar o CSS
+                void contentEl.offsetWidth;
+                
+                // Executar animação de entrada
+                contentEl.classList.remove('opacity-0', 'translate-x-4');
+                contentEl.classList.add('opacity-100', 'translate-x-0');
+            }, 300); // O tempo acompanha o 'duration-300' do CSS
+        }
+        // --------------------------------------
 
         // Lógica de animação na rolagem
         document.addEventListener('DOMContentLoaded', () => {
@@ -286,6 +411,44 @@
 
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
             animatedElements.forEach(el => observer.observe(el));
+
+            // --- Lógica de Arrasto com o Mouse (Desktop) ---
+            const slider = document.querySelector('.hide-scrollbar');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.style.cursor = 'grab'; // Muda o cursor do rato para indicar que pode ser arrastado
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false; // Reseta o estado de arrastar
+                slider.classList.remove('snap-x'); // Remove temporariamente o "snap" para o arrasto não travar
+                slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+                slider.classList.add('snap-x'); // Devolve o snap
+            });
+
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+                slider.classList.add('snap-x'); // Devolve o snap
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                isDragging = true; // Se o rato se moveu enquanto pressionado, é um arrasto
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 1.5; // Velocidade do arrasto (1.5x mais rápido)
+                slider.scrollLeft = scrollLeft - walk;
+            });
         });
     </script>
 </body>
