@@ -16,7 +16,7 @@
                     },
                     colors: {
                         brand: {
-                            red: '#B91C1C', // Vermelho elegante
+                            red: '#B91C1C',
                             black: '#0F0F0F',
                             gray: '#F9FAFB'
                         }
@@ -27,10 +27,10 @@
     </script>
     <style>
         body {
-            background-color: #f3f4f6; /* Fundo cinza bem claro para destacar o 'celular' no desktop */
+            background-color: #f3f4f6;
         }
         .mobile-container {
-            max-width: 480px; /* Largura ideal para simular tela de celular */
+            max-width: 480px;
             margin: 0 auto;
             background-color: #ffffff;
             min-height: 100vh;
@@ -186,7 +186,7 @@
                 <h3 class="text-2xl font-bold mb-6 text-brand-black animate-on-scroll">O que estão dizendo...</h3>
                 
                 <div class="space-y-4">
-                    <!-- Avaliação 1 (Homem Adulto - Trabalho) -->
+                    <!-- Avaliação 1 -->
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm animate-on-scroll delay-100">
                         <div class="flex items-center gap-3 mb-3">
                             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto de perfil de Ricardo" class="w-10 h-10 rounded-full object-cover border border-gray-200">
@@ -206,7 +206,7 @@
                         </p>
                     </div>
 
-                    <!-- Avaliação 2 (Mulher Adulta - Defesa Pessoal/Social) -->
+                    <!-- Avaliação 2 -->
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm animate-on-scroll delay-200">
                         <div class="flex items-center gap-3 mb-3">
                             <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto de perfil de Juliana" class="w-10 h-10 rounded-full object-cover border border-gray-200">
@@ -226,7 +226,7 @@
                         </p>
                     </div>
 
-                    <!-- Avaliação 3 (Adolescente - Autoestima) -->
+                    <!-- Avaliação 3 -->
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm animate-on-scroll delay-300">
                         <div class="flex items-center gap-3 mb-3">
                             <img src="https://randomuser.me/api/portraits/men/86.jpg" alt="Foto de perfil de Lucas" class="w-10 h-10 rounded-full object-cover border border-gray-200">
@@ -310,14 +310,24 @@
         // Inicializar os ícones do Lucide
         lucide.createIcons();
 
+        // --- Correção do "Botão Voltar" do Navegador (Bfcache) ---
+        // Desativa a tela de carregamento caso o usuário clique em "voltar"
+        window.addEventListener('pageshow', function(event) {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex', 'opacity-100');
+                overlay.classList.add('opacity-0');
+            }
+        });
+
         // --- Lógica de Redirecionamento e Tela de Carregamento ---
         document.querySelectorAll('.checkout-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                e.preventDefault(); // Impede o link de abrir imediatamente
+                e.preventDefault(); 
                 
                 const overlay = document.getElementById('loading-overlay');
                 
-                // Mostrar a tela de carregamento (remove o hidden e aplica a opacidade para transição suave)
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');
                 
@@ -326,7 +336,6 @@
                     overlay.classList.add('opacity-100');
                 }, 10);
 
-                // Aguarda 1.5 segundos e redireciona para a Kiwify
                 setTimeout(() => {
                     window.location.href = "https://pay.kiwify.com.br/6Mx8riA";
                 }, 1500);
@@ -334,7 +343,7 @@
         });
 
         // --- Lógica das Abas dos Capítulos ---
-        let isDragging = false; // Variável para controlar o arrasto no desktop e evitar cliques acidentais
+        let isDragging = false;
 
         const chapterData = {
             1: { title: "O Alfabeto Silencioso", icon: "book-open", desc: "Aprenda as três regras de ouro para ler pessoas sem cair no 'efeito Sherlock Holmes'. Entenda como identificar a 'linha de base', a regra dos agrupamentos e o peso do contexto." },
@@ -345,9 +354,8 @@
         };
 
         function changeChapter(id) {
-            if (isDragging) return; // Se o usuário estava apenas arrastando a barra, cancela a ação de clique do botão
+            if (isDragging) return;
             
-            // Atualizar o estilo visual dos botões
             document.querySelectorAll('.chapter-btn').forEach((btn, index) => {
                 if (index + 1 === id) {
                     btn.className = 'chapter-btn shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-brand-red text-white shadow-md shadow-red-900/20 snap-start';
@@ -358,12 +366,10 @@
 
             const contentEl = document.getElementById('chapter-content');
             
-            // Iniciar animação de saída (desliza para esquerda e some)
             contentEl.classList.remove('opacity-100', 'translate-x-0');
             contentEl.classList.add('opacity-0', '-translate-x-4');
             
             setTimeout(() => {
-                // Atualizar o texto e o ícone
                 contentEl.innerHTML = `
                     <h4 class="font-bold text-lg text-brand-black mb-2 flex items-center gap-2">
                         <i data-lucide="${chapterData[id].icon}" class="text-brand-red w-5 h-5"></i>
@@ -373,37 +379,31 @@
                         ${chapterData[id].desc}
                     </p>
                 `;
-                lucide.createIcons(); // Recriar o ícone injetado
+                lucide.createIcons();
                 
-                // Preparar a animação de entrada (desliza da direita)
                 contentEl.classList.remove('-translate-x-4');
                 contentEl.classList.add('translate-x-4');
                 
-                // Forçar a renderização do browser para reiniciar o CSS
                 void contentEl.offsetWidth;
                 
-                // Executar animação de entrada
                 contentEl.classList.remove('opacity-0', 'translate-x-4');
                 contentEl.classList.add('opacity-100', 'translate-x-0');
-            }, 300); // O tempo acompanha o 'duration-300' do CSS
+            }, 300);
         }
-        // --------------------------------------
 
-        // Lógica de animação na rolagem
+        // Lógica de animação na rolagem e arraste do mouse
         document.addEventListener('DOMContentLoaded', () => {
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.1 // Dispara quando 10% do elemento está visível na tela
+                threshold: 0.1
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Aparece o elemento
                         entry.target.classList.add('is-visible');
                     } else {
-                        // Remove a classe para a animação acontecer novamente caso ele saia da tela
                         entry.target.classList.remove('is-visible');
                     }
                 });
@@ -412,18 +412,17 @@
             const animatedElements = document.querySelectorAll('.animate-on-scroll');
             animatedElements.forEach(el => observer.observe(el));
 
-            // --- Lógica de Arrasto com o Mouse (Desktop) ---
             const slider = document.querySelector('.hide-scrollbar');
             let isDown = false;
             let startX;
             let scrollLeft;
 
-            slider.style.cursor = 'grab'; // Muda o cursor do rato para indicar que pode ser arrastado
+            slider.style.cursor = 'grab';
 
             slider.addEventListener('mousedown', (e) => {
                 isDown = true;
-                isDragging = false; // Reseta o estado de arrastar
-                slider.classList.remove('snap-x'); // Remove temporariamente o "snap" para o arrasto não travar
+                isDragging = false;
+                slider.classList.remove('snap-x');
                 slider.style.cursor = 'grabbing';
                 startX = e.pageX - slider.offsetLeft;
                 scrollLeft = slider.scrollLeft;
@@ -432,21 +431,21 @@
             slider.addEventListener('mouseleave', () => {
                 isDown = false;
                 slider.style.cursor = 'grab';
-                slider.classList.add('snap-x'); // Devolve o snap
+                slider.classList.add('snap-x');
             });
 
             slider.addEventListener('mouseup', () => {
                 isDown = false;
                 slider.style.cursor = 'grab';
-                slider.classList.add('snap-x'); // Devolve o snap
+                slider.classList.add('snap-x');
             });
 
             slider.addEventListener('mousemove', (e) => {
                 if (!isDown) return;
                 e.preventDefault();
-                isDragging = true; // Se o rato se moveu enquanto pressionado, é um arrasto
+                isDragging = true;
                 const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 1.5; // Velocidade do arrasto (1.5x mais rápido)
+                const walk = (x - startX) * 1.5;
                 slider.scrollLeft = scrollLeft - walk;
             });
         });
